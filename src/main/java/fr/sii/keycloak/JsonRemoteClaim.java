@@ -221,24 +221,21 @@ public class JsonRemoteClaim extends AbstractOIDCProtocolMapper implements OIDCA
         // Call remote service
         Response response;
         final String url = mappingModel.getConfig().get(REMOTE_URL);
-        try {
-            Client client = ClientBuilder.newBuilder().build();
-            WebTarget target = client.target(url);
-            // Build parameters
-            for (Map.Entry<String, String> param : parameters.entrySet()) {
-                target = target.queryParam(param.getKey(), param.getValue());
-            }
-            Invocation.Builder builder = target.request(MediaType.APPLICATION_JSON);
-            // Build headers
-            for (Map.Entry<String, String> header : headers.entrySet()) {
-                builder = builder.header(header.getKey(), header.getValue());
-            }
-            // Call
-            response = builder.get();
-        } catch(RuntimeException e) {
-            // exceptions are thrown to prevent token from being delivered without all information
-            throw new JsonRemoteClaimException("Error when accessing remote claim", url, e);
+        
+        Client client = ClientBuilder.newClient();
+        WebTarget target = client.target(url);
+        // Build parameters
+        for (Map.Entry<String, String> param : parameters.entrySet()) {
+            target = target.queryParam(param.getKey(), param.getValue());
         }
+        Invocation.Builder builder = target.request(MediaType.APPLICATION_JSON);
+        // Build headers
+        for (Map.Entry<String, String> header : headers.entrySet()) {
+            builder = builder.header(header.getKey(), header.getValue());
+        }
+        // Call
+        response = builder.get();
+    
 
         // Check response status
         if (response.getStatus() != 200) {
