@@ -42,6 +42,7 @@ import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Client;
 
 import org.jboss.resteasy.plugins.providers.jackson.ResteasyJackson2Provider;
 import org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient4Engine;
@@ -61,8 +62,6 @@ public class JsonRemoteClaim extends AbstractOIDCProtocolMapper implements OIDCA
     private final static String REMOTE_PARAMETERS = "remote.parameters";
     private final static String REMOTE_PARAMETERS_USERNAME = "remote.parameters.username";
     private final static String REMOTE_PARAMETERS_CLIENTID = "remote.parameters.clientid";
-
-    //private static Client client = ClientBuilder.newClient();
 
     /**
      * Inner configuration to cache retrieved authorization for multiple tokens
@@ -223,7 +222,7 @@ public class JsonRemoteClaim extends AbstractOIDCProtocolMapper implements OIDCA
         Response response;
         final String url = mappingModel.getConfig().get(REMOTE_URL);
         try {
-            ResteasyClient client = createResteasyClient();
+            Client client = ClientBuilder.newBuilder().build();
             WebTarget target = client.target(url);
             // Build parameters
             for (Map.Entry<String, String> param : parameters.entrySet()) {
@@ -258,91 +257,5 @@ public class JsonRemoteClaim extends AbstractOIDCProtocolMapper implements OIDCA
         }
 
     }
-
-    protected static ResteasyClient createResteasyClient() {
-        try {
-            return createResteasyClient(false, null);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    protected static ResteasyClient createResteasyClient(boolean ignoreUnknownProperties, Boolean followRedirects) throws CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException, KeyManagementException {
-        ResteasyClientBuilder resteasyClientBuilder = ClientBuilder.newBuilder().build();
-
-        /**if ("true".equals(System.getProperty("auth.server.ssl.required"))) {
-            File trustore = new File(PROJECT_BUILD_DIRECTORY, "dependency/keystore/keycloak.truststore");
-            resteasyClientBuilder.sslContext(getSSLContextWithTrustore(trustore, "secret"));
-
-            System.setProperty("javax.net.ssl.trustStore", trustore.getAbsolutePath());
-        }**/
-
-        // We need to ignore unknown JSON properties e.g. in the adapter configuration representation
-        // during adapter backward compatibility testing
-        if (ignoreUnknownProperties) {
-            // We need to use anonymous class to avoid the following error from RESTEasy:
-            // Provider class org.jboss.resteasy.plugins.providers.jackson.ResteasyJackson2Provider is already registered.  2nd registration is being ignored.
-            ResteasyJackson2Provider jacksonProvider = new ResteasyJackson2Provider() {};
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            jacksonProvider.setMapper(objectMapper);
-            resteasyClientBuilder.register(jacksonProvider, 100);
-        }
-
-        resteasyClientBuilder
-                .hostnameVerification(ResteasyClientBuilder.HostnameVerificationPolicy.WILDCARD)
-                .connectionPoolSize(NUMBER_OF_CONNECTIONS)
-                .httpEngine(getCustomClientHttpEngine(resteasyClientBuilder, 1, followRedirects));
-
-        return resteasyClientBuilder.build();
-    }
-
-    protected static SSLContext getSSLContextWithTrustore(File file, String password) throws CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException, KeyManagementException {
-        if (!file.isFile()) {
-            throw new RuntimeException("Truststore file not found: " + file.getAbsolutePath());
-        }
-        SSLContext theContext = SSLContexts.custom()
-                .useProtocol("TLS")
-                .loadTrustMaterial(file, password == null ? null : password.toCharArray())
-                .build();
-        return theContext;
-    }
-
-    protected static ClientHttpEngine getCustomClientHttpEngine(ResteasyClientBuilder resteasyClientBuilder, int validateAfterInactivity, Boolean followRedirects) {
-        return new CustomClientHttpEngineBuilder43(validateAfterInactivity, followRedirects).resteasyClientBuilder(resteasyClientBuilder).build();
-    }
-
-    /**
-     * Adds a possibility to pass validateAfterInactivity parameter into underlying ConnectionManager. The parameter affects how
-     * long the connection is being used without testing if it became stale, default value is 2000ms
-     */
-    protected static class CustomClientHttpEngineBuilder43 extends ClientHttpEngineBuilder43 {
-
-        private final int validateAfterInactivity;
-        private final Boolean followRedirects;
-
-        private CustomClientHttpEngineBuilder43(int validateAfterInactivity, Boolean followRedirects) {
-            this.validateAfterInactivity = validateAfterInactivity;
-            this.followRedirects = followRedirects;
-        }
-
-        @Override
-        protected ClientHttpEngine createEngine(final HttpClientConnectionManager cm, final RequestConfig.Builder rcBuilder,
-                final HttpHost defaultProxy, final int responseBufferSize, final HostnameVerifier verifier, final SSLContext theContext) {
-            final ClientHttpEngine engine;
-            if (cm instanceof PoolingHttpClientConnectionManager) {
-                PoolingHttpClientConnectionManager pcm = (PoolingHttpClientConnectionManager) cm;
-                pcm.setValidateAfterInactivity(validateAfterInactivity);
-                engine = super.createEngine(pcm, rcBuilder, defaultProxy, responseBufferSize, verifier, theContext);
-            } else {
-                engine = super.createEngine(cm, rcBuilder, defaultProxy, responseBufferSize, verifier, theContext);
-            }
-            if (followRedirects != null) {
-                ((ApacheHttpClient4Engine) engine).setFollowRedirects(followRedirects);
-            }
-            return engine;
-        }
-    }
-
 
 }
