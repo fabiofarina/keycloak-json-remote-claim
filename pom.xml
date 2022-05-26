@@ -39,7 +39,7 @@
                     <configuration>
                         <archive>
                             <manifestEntries>
-                                <Dependencies>org.keycloak.keycloak-core,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.keycloak.keycloak-services</Dependencies>
+                                <Dependencies>org.keycloak.keycloak-core,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.keycloak.keycloak-services,resteasy-client</Dependencies>
                             </manifestEntries>
                         </archive>
                     </configuration>
@@ -93,6 +93,7 @@
             <artifactId>resteasy-jaxb-provider</artifactId>
             <version>${resteasy.versions}</version>
         </dependency>
+        
     </dependencies>
 
 </project>

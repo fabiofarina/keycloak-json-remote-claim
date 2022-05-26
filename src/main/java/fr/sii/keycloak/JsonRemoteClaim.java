@@ -18,25 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.HostnameVerifier;
-
-import org.apache.http.HttpHost;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.conn.HttpClientConnectionManager;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.ssl.SSLContexts;
-
-import org.jboss.resteasy.client.jaxrs.ClientHttpEngine;
-import org.jboss.resteasy.client.jaxrs.ClientHttpEngineBuilder43;
-import org.jboss.resteasy.client.jaxrs.ResteasyClient;
-import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
-
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.Response;
@@ -44,10 +25,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Client;
 
-import org.jboss.resteasy.plugins.providers.jackson.ResteasyJackson2Provider;
-import org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient4Engine;
-
-//import static org.keycloak.testsuite.utils.io.IOUtil.PROJECT_BUILD_DIRECTORY;
 
 /**
  * @author <a href="mailto:ni.roussel@gmail.com">Nicolas Roussel</a>
