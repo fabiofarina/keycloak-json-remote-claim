@@ -38,6 +38,7 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.MediaType;
 
