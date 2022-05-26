@@ -222,7 +222,7 @@ public class JsonRemoteClaim extends AbstractOIDCProtocolMapper implements OIDCA
         Response response;
         final String url = mappingModel.getConfig().get(REMOTE_URL);
         
-        Client client = ClientBuilder.newClient();
+        Client client = ClientBuilder.newBuilder().build();
         WebTarget target = client.target(url);
         // Build parameters
         for (Map.Entry<String, String> param : parameters.entrySet()) {
@@ -236,7 +236,6 @@ public class JsonRemoteClaim extends AbstractOIDCProtocolMapper implements OIDCA
         // Call
         response = builder.get();
     
-
         // Check response status
         if (response.getStatus() != 200) {
             response.close();
