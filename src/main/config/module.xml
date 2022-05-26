@@ -11,15 +11,5 @@
     <module name="org.jboss.logging"/>
     <module name="javax.ws.rs-api"/>
     <module name="com.fasterxml.jackson.core.jackson-databind"/>
-    <dependency>
-        <groupId>org.glassfish.jersey.core</groupId>
-        <artifactId>jersey-client</artifactId>
-        <version>2.25.1</version>
-    </dependency>
-    <dependency>
-      <groupId>org.glassfish.jersey.media</groupId>
-      <artifactId>jersey-media-json-jackson</artifactId>
-      <version>2.25.1</version>
-    </dependency>    
   </dependencies>
 </module>
