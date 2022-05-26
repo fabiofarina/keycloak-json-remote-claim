@@ -1,17 +1,18 @@
 package fr.sii.keycloak;
 
-import com.fasterxml.jackson.databind.JsonNode;
+//import com.fasterxml.jackson.databind.JsonNode;
 import org.keycloak.models.*;
 import org.keycloak.protocol.oidc.mappers.*;
 import org.keycloak.provider.ProviderConfigProperty;
 import org.keycloak.representations.IDToken;
 
-import javax.ws.rs.client.Client;
+/**import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+**/
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +33,7 @@ public class JsonRemoteClaim extends AbstractOIDCProtocolMapper implements OIDCA
     private final static String REMOTE_PARAMETERS_USERNAME = "remote.parameters.username";
     private final static String REMOTE_PARAMETERS_CLIENTID = "remote.parameters.clientid";
 
-    private static Client client = ClientBuilder.newClient();
+    //private static Client client = ClientBuilder.newClient();
 
     /**
      * Inner configuration to cache retrieved authorization for multiple tokens
@@ -121,27 +122,15 @@ public class JsonRemoteClaim extends AbstractOIDCProtocolMapper implements OIDCA
 
     @Override
     protected void setClaim(IDToken token, ProtocolMapperModel mappingModel, UserSessionModel userSession, KeycloakSession keycloakSession, ClientSessionContext clientSessionCtx) {
-        JsonNode claims = clientSessionCtx.getAttribute(REMOTE_AUTHORIZATION_ATTR, JsonNode.class);
+        /**JsonNode claims = clientSessionCtx.getAttribute(REMOTE_AUTHORIZATION_ATTR, JsonNode.class);
         if (claims == null) {
             claims =  getRemoteAuthorizations(mappingModel, userSession);
             clientSessionCtx.setAttribute(REMOTE_AUTHORIZATION_ATTR, claims);
         }
 
-        OIDCAttributeMapperHelper.mapClaim(token, mappingModel, claims);
+        OIDCAttributeMapperHelper.mapClaim(token, mappingModel, claims);**/
     }
 
-    /**
-     * Deprecated, added for older versions
-     *
-     * Caution: This version does not allow to minimize request number
-     *
-     * @deprecated override {@link #setClaim(IDToken, ProtocolMapperModel, UserSessionModel, KeycloakSession, ClientSessionContext)} instead.
-     */
-    @Override
-    protected void setClaim(IDToken token, ProtocolMapperModel mappingModel, UserSessionModel userSession) {
-        JsonNode claims = getRemoteAuthorizations(mappingModel, userSession);
-        OIDCAttributeMapperHelper.mapClaim(token, mappingModel, claims);
-    }
 
     private Map<String, String> getQueryParameters(ProtocolMapperModel mappingModel, UserSessionModel userSession) {
         final String configuredParameter = mappingModel.getConfig().get(REMOTE_PARAMETERS);
@@ -194,7 +183,7 @@ public class JsonRemoteClaim extends AbstractOIDCProtocolMapper implements OIDCA
         return map;
     }
 
-    private JsonNode getRemoteAuthorizations(ProtocolMapperModel mappingModel, UserSessionModel userSession) {
+    /** private JsonNode getRemoteAuthorizations(ProtocolMapperModel mappingModel, UserSessionModel userSession) {
         // Get parameters
         Map<String, String> parameters = getQueryParameters(mappingModel, userSession);
         // Get headers
@@ -237,5 +226,5 @@ public class JsonRemoteClaim extends AbstractOIDCProtocolMapper implements OIDCA
             response.close();
         }
 
-    }
+    } **/
 }
