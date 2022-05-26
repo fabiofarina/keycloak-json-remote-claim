@@ -44,7 +44,7 @@ import javax.ws.rs.core.MediaType;
 import org.jboss.resteasy.plugins.providers.jackson.ResteasyJackson2Provider;
 import org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient4Engine;
 
-import static org.keycloak.testsuite.utils.io.IOUtil.PROJECT_BUILD_DIRECTORY;
+//import static org.keycloak.testsuite.utils.io.IOUtil.PROJECT_BUILD_DIRECTORY;
 
 /**
  * @author <a href="mailto:ni.roussel@gmail.com">Nicolas Roussel</a>
@@ -268,12 +268,12 @@ public class JsonRemoteClaim extends AbstractOIDCProtocolMapper implements OIDCA
     protected static ResteasyClient createResteasyClient(boolean ignoreUnknownProperties, Boolean followRedirects) throws CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException, KeyManagementException {
         ResteasyClientBuilder resteasyClientBuilder = new ResteasyClientBuilder();
 
-        if ("true".equals(System.getProperty("auth.server.ssl.required"))) {
+        /**if ("true".equals(System.getProperty("auth.server.ssl.required"))) {
             File trustore = new File(PROJECT_BUILD_DIRECTORY, "dependency/keystore/keycloak.truststore");
             resteasyClientBuilder.sslContext(getSSLContextWithTrustore(trustore, "secret"));
 
             System.setProperty("javax.net.ssl.trustStore", trustore.getAbsolutePath());
-        }
+        }**/
 
         // We need to ignore unknown JSON properties e.g. in the adapter configuration representation
         // during adapter backward compatibility testing
