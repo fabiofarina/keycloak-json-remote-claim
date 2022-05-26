@@ -37,9 +37,14 @@ import org.jboss.resteasy.client.jaxrs.ClientHttpEngineBuilder43;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 
-import org.jboss.resteasy.plugins.providers.jackson.ResteasyJackson2Provider;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.MediaType;
 
+import org.jboss.resteasy.plugins.providers.jackson.ResteasyJackson2Provider;
 import org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient4Engine;
+
+import static org.keycloak.testsuite.utils.io.IOUtil.PROJECT_BUILD_DIRECTORY;
 
 /**
  * @author <a href="mailto:ni.roussel@gmail.com">Nicolas Roussel</a>
@@ -61,6 +66,7 @@ public class JsonRemoteClaim extends AbstractOIDCProtocolMapper implements OIDCA
      * Inner configuration to cache retrieved authorization for multiple tokens
      */
     private final static String REMOTE_AUTHORIZATION_ATTR = "remote-authorizations";
+    private final static int NUMBER_OF_CONNECTIONS = 10;
 
     /*
      * ID of the token mapper.
