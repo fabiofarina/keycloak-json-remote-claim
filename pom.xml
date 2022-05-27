@@ -14,7 +14,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <keycloak.version>18.0.0</keycloak.version>
-        <quarkus.versions>2.9.2.Final</quarkus.versions>
+        <quarkus.version>2.9.2.Final</quarkus.version>
         <java.version>1.8</java.version>
     </properties>
 
@@ -79,22 +79,27 @@
             <dependency>
                 <groupId>io.quarkus</groupId>
                 <artifactId>quarkus-rest-client</artifactId>
+                <version>${quarkus.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.quarkus</groupId>
                 <artifactId>quarkus-rest-client-jackson</artifactId>
+                <version>${quarkus.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.quarkus</groupId>
                 <artifactId>quarkus-apache-httpclient</artifactId>
+                <version>${quarkus.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.quarkus</groupId>
                 <artifactId>quarkus-arc</artifactId>
+                <version>${quarkus.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.quarkus</groupId>
                 <artifactId>quarkus-resteasy</artifactId>
+                <version>${quarkus.version}</version>
             </dependency>
         
     </dependencies>
