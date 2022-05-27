@@ -39,11 +39,24 @@
                     <configuration>
                         <archive>
                             <manifestEntries>
-                                <Dependencies>org.keycloak.keycloak-core,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.keycloak.keycloak-services,resteasy-client</Dependencies>
+                                <Dependencies>org.keycloak.keycloak-core,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.keycloak.keycloak-services</Dependencies>
                             </manifestEntries>
                         </archive>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <configuration>
+                        <archive>
+                            <manifestEntries>
+                                <Dependencies>org.keycloak.keycloak-core,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,org.keycloak.keycloak-services</Dependencies>
+                            </manifestEntries>
+                        </archive>
+                        <descriptorRefs>
+                            <descriptorRef>jar-with-dependencies</descriptorRef>
+                        </descriptorRefs>
+                    </configuration>
+                </plugin>                
             </plugins>
         </pluginManagement>
     </build>
