@@ -18,13 +18,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Client;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
+import java.net.http.HttpClient;
+import java.net.http.HttpClient.Builder;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 /**
  * @author <a href="mailto:ni.roussel@gmail.com">Nicolas Roussel</a>
@@ -189,6 +189,20 @@ public class JsonRemoteClaim extends AbstractOIDCProtocolMapper implements OIDCA
         return map;
     }
 
+    public static String getParamsString(Map<String, String> params) throws UnsupportedEncodingException {
+        StringBuilder result = new StringBuilder();
+
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+            result.append("=");
+            result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+            result.append("&");
+        }
+
+        String resultString = result.toString();
+        return resultString.length() > 0 ? resultString.substring(0, resultString.length() - 1) : resultString;
+    }
+
     private JsonNode getRemoteAuthorizations(ProtocolMapperModel mappingModel, UserSessionModel userSession) {
         // Get parameters
         Map<String, String> parameters = getQueryParameters(mappingModel, userSession);
@@ -196,39 +210,37 @@ public class JsonRemoteClaim extends AbstractOIDCProtocolMapper implements OIDCA
         Map<String, String> headers = getheaders(mappingModel, userSession);
 
         // Call remote service
-        Response response;
         final String url = mappingModel.getConfig().get(REMOTE_URL);
-        
-        Client client = ClientBuilder.newBuilder().build();
-        WebTarget target = client.target(url);
-        // Build parameters
-        for (Map.Entry<String, String> param : parameters.entrySet()) {
-            target = target.queryParam(param.getKey(), param.getValue());
-        }
-        Invocation.Builder builder = target.request(MediaType.APPLICATION_JSON);
+        URI req_uri = new URI(url+"?"+getParamsString(parameters));
+
+        HttpRequest.Builder builder = HttpRequest.newBuilder()
+            .uri(req_uri)
+            .header("Content-Type", "application/json; utf-8")
+            .header("Accept", "application/json");
+
         // Build headers
         for (Map.Entry<String, String> header : headers.entrySet()) {
             builder = builder.header(header.getKey(), header.getValue());
         }
-        // Call
-        response = builder.get();
-    
-        // Check response status
-        if (response.getStatus() != 200) {
-            response.close();
-            throw new JsonRemoteClaimException("Wrong status received for remote claim - Expected: 200, Received: " + response.getStatus(), url);
+
+        HttpRequest request = builder.GET().build();
+        HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.ALWAYS).build();
+
+        HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+        if (response.statusCode() != 200) {
+            throw new JsonRemoteClaimException("Wrong status received for remote claim - Expected: 200, Received: " + response.statusCode(), url);
         }
 
         // Bind JSON response
         try {
-            return response.readEntity(JsonNode.class);
+            String j = response.body();
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode actualObj = mapper.readTree(jsonString);
+            return actualObj;
         } catch(RuntimeException e) {
             // exceptions are thrown to prevent token from being delivered without all information
             throw new JsonRemoteClaimException("Error when parsing response for remote claim", url, e);
-        } finally {
-            response.close();
         }
-
     }
 
 }
