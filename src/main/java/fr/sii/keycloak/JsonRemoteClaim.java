@@ -185,7 +185,6 @@ public class JsonRemoteClaim extends AbstractOIDCProtocolMapper implements OIDCA
     public static String getParamsString(Map<String, String> params) {
         StringBuilder result = new StringBuilder();
 
-}
         for (Map.Entry<String, String> entry : params.entrySet()) {
             try{
                 result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
@@ -195,7 +194,7 @@ public class JsonRemoteClaim extends AbstractOIDCProtocolMapper implements OIDCA
             } catch(UnsupportedEncodingException e){
                 throw new JsonRemoteClaimException("Wrong encoding: " + e, url);
             }
-
+        }
         String resultString = result.toString();
         return resultString.length() > 0 ? resultString.substring(0, resultString.length() - 1) : resultString;
     }
