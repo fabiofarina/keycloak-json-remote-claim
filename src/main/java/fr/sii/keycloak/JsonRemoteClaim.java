@@ -11,6 +11,7 @@ import org.keycloak.representations.IDToken;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -192,7 +193,7 @@ public class JsonRemoteClaim extends AbstractOIDCProtocolMapper implements OIDCA
                 result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
                 result.append("&");
             } catch(UnsupportedEncodingException e){
-                throw new JsonRemoteClaimException("Wrong encoding: " + e, url);
+                throw new JsonRemoteClaimException("Wrong encoding: " + e, "");
             }
         }
         String resultString = result.toString();
@@ -207,8 +208,10 @@ public class JsonRemoteClaim extends AbstractOIDCProtocolMapper implements OIDCA
 
         // Call remote service
         final String url = mappingModel.getConfig().get(REMOTE_URL);
+        URI req_uri;
+
         try {
-            URI req_uri = new URI(url+"?"+getParamsString(parameters));
+            req_uri = new URI(url+"?"+getParamsString(parameters));
         } catch (URISyntaxException e){
             throw new JsonRemoteClaimException("Wrong URI: " + e, url);
         }
