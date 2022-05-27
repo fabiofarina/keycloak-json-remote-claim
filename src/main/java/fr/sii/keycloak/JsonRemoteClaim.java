@@ -185,12 +185,16 @@ public class JsonRemoteClaim extends AbstractOIDCProtocolMapper implements OIDCA
     public static String getParamsString(Map<String, String> params) {
         StringBuilder result = new StringBuilder();
 
+}
         for (Map.Entry<String, String> entry : params.entrySet()) {
-            result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
-            result.append("=");
-            result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
-            result.append("&");
-        }
+            try{
+                result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+                result.append("=");
+                result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+                result.append("&");
+            } catch(UnsupportedEncodingException e){
+                throw new JsonRemoteClaimException("Wrong encoding: " + e, url);
+            }
 
         String resultString = result.toString();
         return resultString.length() > 0 ? resultString.substring(0, resultString.length() - 1) : resultString;
@@ -204,7 +208,11 @@ public class JsonRemoteClaim extends AbstractOIDCProtocolMapper implements OIDCA
 
         // Call remote service
         final String url = mappingModel.getConfig().get(REMOTE_URL);
-        URI req_uri = new URI(url+"?"+getParamsString(parameters));
+        try {
+            URI req_uri = new URI(url+"?"+getParamsString(parameters));
+        } catch (URISyntaxException e){
+            throw new JsonRemoteClaimException("Wrong URI: " + e, url);
+        }
 
         HttpRequest.Builder builder = HttpRequest.newBuilder()
             .uri(req_uri)
