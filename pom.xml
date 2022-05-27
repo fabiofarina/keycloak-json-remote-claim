@@ -79,27 +79,22 @@
             <dependency>
                 <groupId>io.quarkus</groupId>
                 <artifactId>quarkus-rest-client</artifactId>
-                <version>${quarkus.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.quarkus</groupId>
                 <artifactId>quarkus-rest-client-jackson</artifactId>
-                <version>${quarkus.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.quarkus</groupId>
                 <artifactId>quarkus-apache-httpclient</artifactId>
-                <version>${quarkus.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.quarkus</groupId>
                 <artifactId>quarkus-arc</artifactId>
-                <version>${quarkus.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.quarkus</groupId>
                 <artifactId>quarkus-resteasy</artifactId>
-                <version>${quarkus.version}</version>
             </dependency>
         
     </dependencies>
