@@ -235,8 +235,10 @@ public class JsonRemoteClaim extends AbstractOIDCProtocolMapper implements OIDCA
             response = client.send(request, BodyHandlers.ofString());
         } catch (IOException e){
             throw new JsonRemoteClaimException("Wrong Response: " + e, url);
+        } catch (InterruptedException e){
+            throw new JsonRemoteClaimException("Wrong Response: " + e, url);
         }        
-
+    
         if (response.statusCode() != 200) {
             throw new JsonRemoteClaimException("Wrong status received for remote claim - Expected: 200, Received: " + response.statusCode(), url);
         }
