@@ -11,10 +11,14 @@ import org.keycloak.representations.IDToken;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.net.*;
 import java.net.http.*;
+import java.net.http.HttpResponse.BodyHandlers;
+
 
 /**
  * @author <a href="mailto:ni.roussel@gmail.com">Nicolas Roussel</a>
@@ -223,7 +227,7 @@ public class JsonRemoteClaim extends AbstractOIDCProtocolMapper implements OIDCA
 
         // Bind JSON response
         try {
-            String j = response.body();
+            String jsonString = response.body();
             ObjectMapper mapper = new ObjectMapper();
             JsonNode actualObj = mapper.readTree(jsonString);
             return actualObj;
