@@ -11,7 +11,6 @@ import org.keycloak.representations.IDToken;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -183,7 +182,7 @@ public class JsonRemoteClaim extends AbstractOIDCProtocolMapper implements OIDCA
         return map;
     }
 
-    public static String getParamsString(Map<String, String> params) throws UnsupportedEncodingException {
+    public static String getParamsString(Map<String, String> params) {
         StringBuilder result = new StringBuilder();
 
         for (Map.Entry<String, String> entry : params.entrySet()) {
