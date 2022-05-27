@@ -3,6 +3,7 @@ package fr.sii.keycloak;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import org.keycloak.models.*;
 import org.keycloak.protocol.oidc.mappers.*;
@@ -229,7 +230,13 @@ public class JsonRemoteClaim extends AbstractOIDCProtocolMapper implements OIDCA
         HttpRequest request = builder.GET().build();
         HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.ALWAYS).build();
 
-        HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+        HttpResponse<String> response;
+        try {
+            response = client.send(request, BodyHandlers.ofString());
+        } catch (IOException e){
+            throw new JsonRemoteClaimException("Wrong Response: " + e, url);
+        }        
+
         if (response.statusCode() != 200) {
             throw new JsonRemoteClaimException("Wrong status received for remote claim - Expected: 200, Received: " + response.statusCode(), url);
         }
@@ -240,7 +247,7 @@ public class JsonRemoteClaim extends AbstractOIDCProtocolMapper implements OIDCA
             ObjectMapper mapper = new ObjectMapper();
             JsonNode actualObj = mapper.readTree(jsonString);
             return actualObj;
-        } catch(RuntimeException e) {
+        } catch(JsonProcessingException e) {
             // exceptions are thrown to prevent token from being delivered without all information
             throw new JsonRemoteClaimException("Error when parsing response for remote claim", url, e);
         }
