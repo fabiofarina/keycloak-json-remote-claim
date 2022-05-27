@@ -12,19 +12,9 @@ import org.keycloak.representations.IDToken;
 import java.io.File;
 import java.io.IOException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-import java.net.http.HttpClient;
-import java.net.http.HttpClient.Builder;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import java.util.*;
+import java.net.*;
+import java.net.http.*;
 
 /**
  * @author <a href="mailto:ni.roussel@gmail.com">Nicolas Roussel</a>
