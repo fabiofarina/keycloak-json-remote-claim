@@ -6,7 +6,7 @@ It adds a new mapper type which retrieves a JSON claim from a remote HTTP endpoi
 
 ## Compatibility
 
-This module currently works with Keycloak Keycloak 8.0.0.
+This module currently works with Keycloak Keycloak 19.0.1.
 
 It is compatible with Keycloak >= 4.6.0 , you may just need to change the keycloak version in the ```pom.xml```.
 
